@@ -32,10 +32,19 @@ function getSidebar(): DefaultTheme.Sidebar {
         text: filename,
         link: "/" + file,
       });
-      console.log(tempSidebar);
     }
   });
   return sidebar;
+}
+
+//根据文件夹位置获取第一个md文件link
+function getFirstMdLink(path: string): string {
+  const files: string[] = glob.sync("./docs/" + path + "/**/*.md");
+  if (files.length > 0) {
+    return files[0].replace(/^docs\//, "").replace(/\.md$/, "");
+  } else {
+    return "";
+  }
 }
 
 // https://vitepress.dev/reference/site-config
@@ -47,7 +56,12 @@ export default () => {
       // https://vitepress.dev/reference/default-theme-config
       nav: [
         { text: "首页", link: "/" },
-        { text: "Vue", link: "/Vue/Vue基础" },
+        { text: "Vue", link: getFirstMdLink("Vue") },
+        { text: "React", link: getFirstMdLink("React") },
+        { text: "Typescript", link: getFirstMdLink("Typescript") },
+        { text: "Javascript", link: getFirstMdLink("Javascript") },
+        { text: "小程序", link: getFirstMdLink("小程序") },
+        { text: "浏览器", link: getFirstMdLink("浏览器") },
       ],
 
       // sidebar: [
