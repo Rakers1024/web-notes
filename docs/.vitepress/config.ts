@@ -50,6 +50,7 @@ function getFirstMdLink(path: string): string {
 // https://vitepress.dev/reference/site-config
 export default () => {
   return defineConfig({
+    lang: "zh-CN",
     title: "诚哥前端开发笔记",
     description: "一个前端开发者的知识点收集、记录和归档",
     themeConfig: {
@@ -83,6 +84,13 @@ export default () => {
       sidebar: getSidebar(),
       search: {
         provider: "local",
+      },
+      editLink: {
+        pattern: "https://github.com/Rakers1024/web-notes/edit/main/docs/:path",
+        text: "在Github编辑这个页面",
+      },
+      lastUpdated: {
+        text: "最后更新时间",
       },
 
       socialLinks: [{ icon: "github", link: "https://github.com/Rakers1024/web-notes" }],

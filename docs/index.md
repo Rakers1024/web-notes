@@ -18,6 +18,9 @@ hero:
       link: /api-examples
 
 features:
+  - icon: 🛠️
+    title: Vue
+    details: Vue相关知识点
   - title: Feature A
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
   - title: Feature B
@@ -25,3 +28,21 @@ features:
   - title: Feature C
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
+
+
+<script setup>
+import { VPTeamMembers } from 'vitepress/theme'
+
+const members = [
+  {
+    avatar: 'https://www.github.com/Rakers1024.png',
+    name: 'Chengzz',
+    title: '前端工程师',
+    links: [
+      { icon: 'github', link: 'https://github.com/Rakers1024' },
+      // { icon: 'twitter', link: 'https://twitter.com/Rakers4096' }
+    ]
+  }
+]
+</script>
+<VPTeamMembers :members="members" style="margin-top:20px;" />
