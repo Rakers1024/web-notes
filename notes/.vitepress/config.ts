@@ -3,6 +3,17 @@ import { glob } from "glob";
 
 function getSidebar(): DefaultTheme.Sidebar {
   const files: string[] = glob.sync("./notes/**/**/*.md", { ignore: "notes/index.md" });
+  console.log("🚀 ~ file: config.ts:6 ~ getSidebar ~ files:", files);
+  files.reverse();
+  files.forEach((file: string) => {
+    const fileArr: string[] = file.split("/");
+    //将length == 2的放到顶部
+    if (fileArr.length === 2) {
+      const index: number = files.findIndex(item => item === file);
+      files.splice(index, 1);
+      files.unshift(file);
+    }
+  });
   const sidebar: DefaultTheme.Sidebar = [];
   files.forEach((file: string) => {
     file = file.replace(/^notes\//, "");
@@ -17,19 +28,21 @@ function getSidebar(): DefaultTheme.Sidebar {
       //这里文件夹层数不确定 如果是文件夹那么这层就是带items的
       let tempSidebar: DefaultTheme.Sidebar = sidebar;
       for (let i = 0; i < fileArr.length - 1; i++) {
-        const index: number = tempSidebar.findIndex(item => item.text === fileArr[i]);
+        const index: number = tempSidebar.findIndex(
+          item => item.text?.replace(/^\d+\./, "") === fileArr[i].replace(/^\d+\./, "")
+        );
         if (index > -1) {
           tempSidebar = tempSidebar[index].items!;
         } else {
           tempSidebar.push({
-            text: fileArr[i],
+            text: fileArr[i].replace(/^\d+\./, ""),
             items: [],
           });
           tempSidebar = tempSidebar[tempSidebar.length - 1].items!;
         }
       }
       tempSidebar.push({
-        text: filename,
+        text: filename.replace(/^\d+\./, ""),
         link: "/" + file,
       });
     }
@@ -39,7 +52,7 @@ function getSidebar(): DefaultTheme.Sidebar {
 
 //根据文件夹位置获取第一个md文件link
 function getFirstMdLink(path: string): string {
-  const files: string[] = glob.sync("./notes/" + path + "/**/*.md");
+  const files: string[] = glob.sync("./notes/*." + path + "/**/*.md");
   if (files.length > 0) {
     return files[0].replace(/^notes\//, "").replace(/\.md$/, "");
   } else {
