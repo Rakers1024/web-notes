@@ -4,9 +4,10 @@
   "description": "web dev notes",
   "license": "ISC",
   "scripts": {
-    "docs:dev": "vitepress dev docs --host",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "notes:dev": "vitepress dev notes --host",
+    "notes:build": "pnpm -c notes:about && vitepress build notes",
+    "notes:about": "./about.sh",
+    "notes:preview": "vitepress preview notes"
   },
   "repository": {
     "type": "git",

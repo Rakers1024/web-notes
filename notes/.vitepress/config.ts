@@ -2,10 +2,10 @@ import { defineConfig, DefaultTheme } from "vitepress";
 import { glob } from "glob";
 
 function getSidebar(): DefaultTheme.Sidebar {
-  const files: string[] = glob.sync("./docs/**/**/*.md", { ignore: "docs/index.md" });
+  const files: string[] = glob.sync("./notes/**/**/*.md", { ignore: "notes/index.md" });
   const sidebar: DefaultTheme.Sidebar = [];
   files.forEach((file: string) => {
-    file = file.replace(/^docs\//, "");
+    file = file.replace(/^notes\//, "");
     const fileArr: string[] = file.split("/");
     const filename: string = fileArr[fileArr.length - 1].replace(/\.md$/, "");
     if (fileArr.length < 2) {
@@ -39,9 +39,9 @@ function getSidebar(): DefaultTheme.Sidebar {
 
 //根据文件夹位置获取第一个md文件link
 function getFirstMdLink(path: string): string {
-  const files: string[] = glob.sync("./docs/" + path + "/**/*.md");
+  const files: string[] = glob.sync("./notes/" + path + "/**/*.md");
   if (files.length > 0) {
-    return files[0].replace(/^docs\//, "").replace(/\.md$/, "");
+    return files[0].replace(/^notes\//, "").replace(/\.md$/, "");
   } else {
     return "";
   }
@@ -63,6 +63,7 @@ export default () => {
         { text: "Javascript", link: getFirstMdLink("Javascript") },
         { text: "小程序", link: getFirstMdLink("小程序") },
         { text: "浏览器", link: getFirstMdLink("浏览器") },
+        { text: "关于", link: "/about" },
       ],
 
       // sidebar: [
@@ -86,7 +87,7 @@ export default () => {
         provider: "local",
       },
       editLink: {
-        pattern: "https://github.com/Rakers1024/web-notes/edit/main/docs/:path",
+        pattern: "https://github.com/Rakers1024/web-notes/edit/main/notes/:path",
         text: "在Github编辑这个页面",
       },
       lastUpdated: {
