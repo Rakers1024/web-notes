@@ -1,8 +1,11 @@
 import { defineConfig, DefaultTheme } from "vitepress";
 import { glob } from "glob";
 
+const MD_PATH = "./notes/**/**/*.md";
+const MD_IGNORE = ["notes/index.md", "notes/about.md"];
+
 function getSidebar(): DefaultTheme.Sidebar {
-  const files = glob.sync("./notes/**/**/*.md", { ignore: ["notes/index.md", "notes/about.md"] }).reverse();
+  const files = glob.sync(MD_PATH, { ignore: MD_IGNORE }).reverse();
   for (let i = 0; i < files.length; i++) {
     const fileArr: readonly string[] = files[i].split("/");
     //将length == 2的放到顶部
@@ -47,6 +50,17 @@ function getFirstMdLink(path: string): string {
   return file ? `/${file.replace(/^notes\//, "").replace(/\.md$/, "")}` : "";
 }
 
+//重新所有路径的数字开头文件
+function numberMdRewrites() {
+  const files = glob.sync(MD_PATH, { ignore: MD_IGNORE });
+  const rewrites: Record<string, string> = {};
+  files.forEach(file => {
+    file = file.replace(/^notes\//, "");
+    rewrites[file] = file.replace(/^\d+\./, "").replace(/\/\d+\./g, "/");
+  });
+  return rewrites;
+}
+
 export default () => {
   return defineConfig({
     lang: "zh-CN",
@@ -76,6 +90,9 @@ export default () => {
       },
       socialLinks: [{ icon: "github", link: "https://github.com/Rakers1024/web-notes" }],
     },
-    vite: {},
+    //vitepress去除路径地址上的排序标识即/^\d+\./
+    rewrites: {
+      ...numberMdRewrites(),
+    },
   });
 };
