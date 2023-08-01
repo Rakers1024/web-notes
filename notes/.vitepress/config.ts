@@ -76,5 +76,6 @@ export default () => {
       },
       socialLinks: [{ icon: "github", link: "https://github.com/Rakers1024/web-notes" }],
     },
+    vite: {},
   });
 };
