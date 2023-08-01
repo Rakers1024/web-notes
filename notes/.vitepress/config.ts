@@ -2,40 +2,32 @@ import { defineConfig, DefaultTheme } from "vitepress";
 import { glob } from "glob";
 
 function getSidebar(): DefaultTheme.Sidebar {
-  const files: string[] = glob.sync("./notes/**/**/*.md", { ignore: "notes/index.md" });
-  console.log("🚀 ~ file: config.ts:6 ~ getSidebar ~ files:", files);
-  files.reverse();
-  files.forEach((file: string) => {
-    const fileArr: string[] = file.split("/");
+  const files = glob.sync("./notes/**/**/*.md", { ignore: ["notes/index.md", "notes/about.md"] }).reverse();
+  for (let i = 0; i < files.length; i++) {
+    const fileArr: readonly string[] = files[i].split("/");
     //将length == 2的放到顶部
     if (fileArr.length === 2) {
-      const index: number = files.findIndex(item => item === file);
-      files.splice(index, 1);
-      files.unshift(file);
+      files.unshift(files.splice(i, 1)[0]);
     }
-  });
+  }
   const sidebar: DefaultTheme.Sidebar = [];
   files.forEach((file: string) => {
-    file = file.replace(/^notes\//, "");
-    const fileArr: string[] = file.split("/");
-    const filename: string = fileArr[fileArr.length - 1].replace(/\.md$/, "");
+    const [, ...fileArr] = file.split("/");
+    const filename = fileArr[fileArr.length - 1].replace(/\.md$/, "");
     if (fileArr.length < 2) {
       sidebar.push({
         text: filename,
-        link: "/" + file,
+        link: `/${file.replace(/^notes\//, "")}`,
       });
     } else {
-      //这里文件夹层数不确定 如果是文件夹那么这层就是带items的
-      let tempSidebar: DefaultTheme.Sidebar = sidebar;
-      for (let i = 0; i < fileArr.length - 1; i++) {
-        const index: number = tempSidebar.findIndex(
-          item => item.text?.replace(/^\d+\./, "") === fileArr[i].replace(/^\d+\./, "")
-        );
+      let tempSidebar = sidebar;
+      for (const folder of fileArr.slice(0, -1)) {
+        const index = tempSidebar.findIndex(({ text }) => text?.replace(/^\d+\./, "") === folder.replace(/^\d+\./, ""));
         if (index > -1) {
           tempSidebar = tempSidebar[index].items!;
         } else {
           tempSidebar.push({
-            text: fileArr[i].replace(/^\d+\./, ""),
+            text: folder.replace(/^\d+\./, ""),
             items: [],
           });
           tempSidebar = tempSidebar[tempSidebar.length - 1].items!;
@@ -43,31 +35,24 @@ function getSidebar(): DefaultTheme.Sidebar {
       }
       tempSidebar.push({
         text: filename.replace(/^\d+\./, ""),
-        link: "/" + file,
+        link: `/${file.replace(/^notes\//, "")}`,
       });
     }
   });
   return sidebar;
 }
 
-//根据文件夹位置获取第一个md文件link
 function getFirstMdLink(path: string): string {
-  const files: string[] = glob.sync("./notes/*." + path + "/**/*.md");
-  if (files.length > 0) {
-    return files[0].replace(/^notes\//, "").replace(/\.md$/, "");
-  } else {
-    return "";
-  }
+  const [file] = glob.sync(`./notes/*.${path}/**/*.md`);
+  return file ? `/${file.replace(/^notes\//, "").replace(/\.md$/, "")}` : "";
 }
 
-// https://vitepress.dev/reference/site-config
 export default () => {
   return defineConfig({
     lang: "zh-CN",
     title: "诚哥前端开发笔记",
     description: "一个前端开发者的知识点收集、记录和归档",
     themeConfig: {
-      // https://vitepress.dev/reference/default-theme-config
       nav: [
         { text: "首页", link: "/" },
         { text: "Vue", link: getFirstMdLink("Vue") },
@@ -78,23 +63,6 @@ export default () => {
         { text: "浏览器", link: getFirstMdLink("浏览器") },
         { text: "关于", link: "/about" },
       ],
-
-      // sidebar: [
-      //   {
-      //     text: "Examples",
-      //     items: [
-      //       { text: "Markdown Examples", link: "/markdown-examples" },
-      //       { text: "Runtime API Examples", link: "/api-examples" },
-      //       {
-      //         text: "Examples2",
-      //         items: [
-      //           { text: "Markdown Examples", link: "/markdown-examples" },
-      //           { text: "Runtime API Examples", link: "/api-examples" },
-      //         ],
-      //       },
-      //     ],
-      //   },
-      // ],
       sidebar: getSidebar(),
       search: {
         provider: "local",
@@ -106,7 +74,6 @@ export default () => {
       lastUpdated: {
         text: "最后更新时间",
       },
-
       socialLinks: [{ icon: "github", link: "https://github.com/Rakers1024/web-notes" }],
     },
   });
