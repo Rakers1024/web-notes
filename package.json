@@ -6,8 +6,8 @@
   "scripts": {
     "notes:dev": "vitepress dev notes --host",
     "notes:build": "pnpm -c notes:about && vitepress build notes",
-    "notes:about": "./about.sh",
-    "notes:preview": "vitepress preview notes"
+    "notes:preview": "vitepress preview notes",
+    "notes:about": "./about.sh"
   },
   "repository": {
     "type": "git",
