@@ -38,7 +38,10 @@ function getSidebar(): DefaultTheme.Sidebar {
       }
       tempSidebar.push({
         text: filename.replace(/^\d+\./, ""),
-        link: `/${file.replace(/^notes\//, "")}`,
+        link: `/${file
+          .replace(/^notes\//, "")
+          .replace(/^\d+\./, "")
+          .replace(/\/\d+\./g, "/")}`,
       });
     }
   });
@@ -47,7 +50,13 @@ function getSidebar(): DefaultTheme.Sidebar {
 
 function getFirstMdLink(path: string): string {
   const [file] = glob.sync(`./notes/*.${path}/**/*.md`);
-  return file ? `/${file.replace(/^notes\//, "").replace(/\.md$/, "")}` : "";
+  return file
+    ? `/${file
+        .replace(/^notes\//, "")
+        .replace(/\.md$/, "")
+        .replace(/^\d+\./, "")
+        .replace(/\/\d+\./g, "/")}`
+    : "";
 }
 
 //重新所有路径的数字开头文件
