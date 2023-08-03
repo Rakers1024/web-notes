@@ -49,7 +49,7 @@ function getSidebar(): DefaultTheme.Sidebar {
 }
 
 function getFirstMdLink(path: string): string {
-  const [file] = glob.sync(`./notes/*.${path}/**/*.md`);
+  const [file] = glob.sync(`./notes/*.${path}/**/*.md`).reverse();
   return file
     ? `/${file
         .replace(/^notes\//, "")
@@ -84,6 +84,7 @@ export default () => {
         { text: "JavaScript", link: getFirstMdLink("JavaScript") },
         { text: "小程序", link: getFirstMdLink("小程序") },
         { text: "浏览器", link: getFirstMdLink("浏览器") },
+        { text: "综合", link: getFirstMdLink("综合") },
         { text: "关于", link: "/about" },
       ],
       sidebar: getSidebar(),
