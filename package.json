@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "web dev notes",
   "license": "ISC",
+  "type": "module",
   "scripts": {
     "notes:dev": "vitepress dev notes --host",
     "notes:build": "pnpm -c notes:about && vitepress build notes",
@@ -18,5 +19,8 @@
   "devDependencies": {
     "glob": "^10.3.3",
     "vitepress": "1.0.0-beta.7"
+  },
+  "dependencies": {
+    "vite-plugin-markdown-preview": "^1.1.1"
   }
 }

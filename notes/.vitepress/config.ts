@@ -1,4 +1,5 @@
 import { defineConfig, DefaultTheme } from "vitepress";
+import MarkdownPreview from "vite-plugin-markdown-preview";
 import { glob } from "glob";
 
 const MD_PATH = "./notes/**/**/*.md";
@@ -103,6 +104,9 @@ export default () => {
     //vitepress去除路径地址上的排序标识即/^\d+\./
     rewrites: {
       ...numberMdRewrites(),
+    },
+    vite: {
+      plugins: [MarkdownPreview()],
     },
   });
 };
